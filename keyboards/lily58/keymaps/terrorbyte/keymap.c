@@ -166,7 +166,7 @@ bool oled_task_user(void) {
     // If you want to change the display of OLED, you need to change here
     //oled_write_ln(read_layer_state(), false)
     oled_write_P(PSTR("-----"), false);
-	switch (get_highest_layer(layer_state))
+	switch (get_highest_layer(layer_state|default_layer_state))
 	{
 		case _QWERTY:
 			oled_write_ln_P(PSTR("Base"), false);

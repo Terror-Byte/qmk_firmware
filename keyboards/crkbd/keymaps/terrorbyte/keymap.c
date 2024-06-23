@@ -23,7 +23,7 @@ enum layer_number {
     _COLEMAK,
     _SYMBOL,
     _NAVIGATION,
-    _MOUSE
+    _LED
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -38,7 +38,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                           KC_TAB,   MO(_NAVIGATION),  KC_SPC,     KC_ENT,   MO(_SYMBOL), KC_LGUI
                                       //`-----------------------------------'  `--------------------------------'
 
-  ),
+    ),
 
     [_SYMBOL] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------------.
@@ -50,7 +50,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+----------+---------+--------+--------+--------+-----------|
                                           _______, _______, _______,   _______,   _______, _______
                                       //`--------------------------'  `--------------------------'
-  ),
+    ),
 
     [_NAVIGATION] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,------------------------------------------------------------------.
@@ -62,11 +62,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+---------+--------------------+--------|
                                           _______, _______, _______,   _______,   _______, _______
                                       //`--------------------------'  `--------------------------'
-  ),
+    ),
 
-    [_MOUSE] = LAYOUT_split_3x6_3(
+    [_LED] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      QK_BOOT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       RGB_TOG, RGB_HUI, RGB_SAI, RGB_VAI, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -74,14 +74,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           XXXXXXX, _______, XXXXXXX,    XXXXXXX, _______, XXXXXXX
                                       //`--------------------------'  `--------------------------'
-  )
+    )
 };
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    return update_tri_layer_state(state, _SYMBOL, _NAVIGATION, _MOUSE);
+    return update_tri_layer_state(state, _SYMBOL, _NAVIGATION, _LED);
 }
 
-//SSD1306 OLED update loop, make sure to enable OLED_ENABLE=yes in rules.mkS
+//SSD1306 OLED update loop, make sure to enable OLED_ENABLE=yes in rules.mk
 #ifdef OLED_ENABLE
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
@@ -119,8 +119,8 @@ bool oled_task_user(void) {
                 oled_write_ln_P(PSTR("Nav"), false);
                 break;
 
-            case _MOUSE:
-                oled_write_P(PSTR("Mouse"), false);
+            case _LED:
+                oled_write_P(PSTR("LED"), false);
                 break;
         }
         oled_write_P(PSTR("-----"), false);

@@ -41,13 +41,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
     [_SYMBOL] = LAYOUT_split_3x6_3(
-  //,-----------------------------------------------------.                    ,----------------------------------------------------------.
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------------.
       _______, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,                        KC_CIRC,  KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN,  KC_GRAVE,
-  //|--------+--------+--------+--------+--------+--------|                    |----------+---------+--------+--------+--------+----------|
+  //|--------+--------+--------+--------+--------+--------|                    |----------+---------+--------+--------+--------+-----------|
       _______,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        KC_NUBS, KC_MINUS,  KC_EQL, KC_LBRC, KC_RBRC, S(KC_NUBS),
-  //|--------+--------+--------+--------+--------+--------|                    |----------+---------+--------+--------+--------+----------|
+  //|--------+--------+--------+--------+--------+--------|                    |----------+---------+--------+--------+--------+-----------|
       _______,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,                        XXXXXXX,  KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR,   _______,
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+----------+---------+--------+--------+--------+----------|
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+----------+---------+--------+--------+--------+-----------|
                                           _______, _______, _______,   _______,   _______, _______
                                       //`--------------------------'  `--------------------------'
   ),
@@ -78,5 +78,65 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-  return update_tri_layer_state(state, _SYMBOL, _NAVIGATION, _MOUSE);
+    return update_tri_layer_state(state, _SYMBOL, _NAVIGATION, _MOUSE);
+}
+
+//SSD1306 OLED update loop, make sure to enable OLED_ENABLE=yes in rules.mkS
+#ifdef OLED_ENABLE
+
+oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+    if (is_keyboard_master())
+        return OLED_ROTATION_270;  // flips the display 180 degrees if offhand
+    else
+        return OLED_ROTATION_180;
+}
+
+// When you add source files to SRC in rules.mk, you can use functions.
+const char* read_layer_state(void);
+const char* read_logo(void);
+void set_keylog(uint16_t keycode, keyrecord_t* record);
+const char* read_keylog(void);
+
+bool oled_task_user(void) {
+    if (is_keyboard_master()) {
+        // If you want to change the display of OLED, you need to change here
+        oled_write_P(PSTR("-----"), false);
+        switch (get_highest_layer(layer_state|default_layer_state))
+        {
+            case _QWERTY:
+                oled_write_ln_P(PSTR("Base"), false);
+                break;
+
+            case _COLEMAK:
+                oled_write_ln_P(PSTR("CLMK"), false);
+                break;
+
+            case _SYMBOL:
+                oled_write_ln_P(PSTR("Symb"), false);
+                break;
+
+            case _NAVIGATION:
+                oled_write_ln_P(PSTR("Nav"), false);
+                break;
+
+            case _MOUSE:
+                oled_write_P(PSTR("Mouse"), false);
+                break;
+        }
+        oled_write_P(PSTR("-----"), false);
+        oled_write_ln(read_keylog(), false);
+    } else {
+        oled_write_P(read_logo(), false);
+    }
+    return false;
+}
+#endif // OLED_ENABLE
+
+bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+    if (record->event.pressed) {
+#ifdef OLED_ENABLE
+        set_keylog(keycode, record);
+#endif
+    }
+    return true;
 }

@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
+#define KC_CAD	LCTL(LALT(KC_DEL))
 
 enum layer_number {
     _QWERTY = 0,
@@ -58,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+---------+--------------------+--------|
        KC_DEL,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,                      KC_PGDN, KC_LEFT, KC_DOWN, KC_RIGHT, KC_MEDIA_PLAY_PAUSE, KC_CAPS,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+---------+--------------------+--------|
-      _______, KC_LCTL,   KC_NO,   KC_NO,  KC_F11,  KC_F12,                      XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,             XXXXXXX, _______,
+      _______, KC_LCTL,   KC_NO,   KC_NO,  KC_F11,  KC_F12,                       KC_CAD, XXXXXXX, XXXXXXX,  XXXXXXX,             KC_RCTL, _______,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+---------+--------------------+--------|
                                           _______, _______, _______,   _______,   _______, _______
                                       //`--------------------------'  `--------------------------'
